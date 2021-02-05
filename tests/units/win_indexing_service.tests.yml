@@ -1,0 +1,43 @@
+- name: test the win_indexing_service module
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - win_indexing_service
+
+  tasks:
+
+    - name: disable indexing (check mode)
+      win_indexing_service:
+        driver_letter: C
+        state: disabled
+      check_mode: yes
+      register: disable_check
+
+    - name: assert disable indexing (check mode)
+      assert:
+        that:
+          - disable_check.changed
+
+    - name: disable indexing
+      win_indexing_service:
+        driver_letter: C
+        state: disabled
+      register: indexing_disable
+
+    - name: assert indexing disabled
+      assert:
+        that:
+          - indexing_disable.changed
+
+    - name: test disable idempotence
+      win_indexing_service:
+        driver_letter: C
+        state: disabled
+      register: indexing_disable
+
+    - name: test disable idempotence
+      assert:
+        that:
+          - not indexing_disable.changed
+
