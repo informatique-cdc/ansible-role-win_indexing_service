@@ -30,9 +30,11 @@ Function Invoke-AnsibleModule {
         }
         if ($params.ContainsKey('check_mode')) {
             $global:complex_args."_ansible_check_mode" = $params.check_mode
+            $params.remove('check_mode')
         }
         if ($params.ContainsKey('diff')) {
             $global:complex_args."_ansible_diff" = $params.diff
+            $params.remove('diff')
         }
 
         $global:complex_args = $global:complex_args + $params
